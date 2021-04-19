@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2021.04.19.01
+// Version 2021.04.19.02
 
 class PhpLivePerms{
   public function __construct(private PhpLivePdo &$PhpLivePdo){
@@ -33,7 +33,7 @@ class PhpLivePerms{
         $result[1]
       );
       if(count($result) === 0):
-        return false;
+        return null;
       else:
         $Resource = $result[0][0];
       endif;
