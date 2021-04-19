@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2021.04.19.00
+// Version 2021.04.19.01
 
 class PhpLivePerms{
   public function __construct(private PhpLivePdo &$PhpLivePdo){
@@ -9,19 +9,20 @@ class PhpLivePerms{
 
   public function Access(
     string|int $Resource,
-    int $User = null
-  ):array|bool{
+    ?int $User = null,
+    ?string $Site = null
+  ):?array{
     $return = ['r' => null, 'w' => null, 'o' => null];
     //Get resource id by name
     if(is_numeric($Resource) === false):
       $result[1] = [
         [':resource', $Resource, PdoStr]
       ];
-      if(session_name() == 'PHPSESSID'):
+      if($Site === null):
         $result[0] = 'site is null';
       else:
         $result[0] = 'site=:site';
-        $result[1][] = [':site', session_name(), PdoStr];
+        $result[1][] = [':site', $Options['Site'], PdoStr];
       endif;
       $result = $PhpLivePdo->Run("
         select resource_id
