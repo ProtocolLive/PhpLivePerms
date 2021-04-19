@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.27.00
+// Version 2021.04.19.00
 
 class PhpLivePerms{
   public function __construct(private PhpLivePdo &$PhpLivePdo){
@@ -11,10 +11,6 @@ class PhpLivePerms{
     string|int $Resource,
     int $User = null
   ):array|bool{
-    if($this->PhpLivePdo === null):
-      return false;
-    endif;
-
     $return = ['r' => null, 'w' => null, 'o' => null];
     //Get resource id by name
     if(is_numeric($Resource) === false):

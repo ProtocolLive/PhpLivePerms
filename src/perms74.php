@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.27.00
+// Version 2021.04.19.00
 
 class PhpLivePerms{
   private PhpLivePdo $PhpLivePdo;
@@ -11,9 +11,6 @@ class PhpLivePerms{
   }
 
   public function Access(array $Options){
-    if($this->PhpLivePdo === null):
-      return false;
-    endif;
     $Options['User'] ??= null;
 
     $return = ['r' => null, 'w' => null, 'o' => null];
