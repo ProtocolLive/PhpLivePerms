@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2021.04.19.02
+// Version 2021.04.19.03
 
 class PhpLivePerms{
   public function __construct(private PhpLivePdo &$PhpLivePdo){
@@ -24,7 +24,7 @@ class PhpLivePerms{
         $result[0] = 'site=:site';
         $result[1][] = [':site', $Options['Site'], PdoStr];
       endif;
-      $result = $PhpLivePdo->Run("
+      $result = $this->PhpLivePdo->Run("
         select resource_id
         from sys_resources
         where resource=:resource
