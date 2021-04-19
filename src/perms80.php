@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2021.04.19.03
+// Version 2021.04.19.04
 
 class PhpLivePerms{
   public function __construct(private PhpLivePdo &$PhpLivePdo){
@@ -45,7 +45,7 @@ class PhpLivePerms{
       where resource_id=?
         and group_id=1
     ",[
-      [1, $Options['Resource'], PdoInt]
+      [1, $Resource, PdoInt]
     ]);
     if(count($result) > 0):
       $return = $this->SetPerms($return, $result[0]);
