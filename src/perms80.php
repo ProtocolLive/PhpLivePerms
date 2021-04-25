@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2021.04.19.04
+// Version 2021.04.25.00
 
 class PhpLivePerms{
   public function __construct(private PhpLivePdo &$PhpLivePdo){
@@ -22,7 +22,7 @@ class PhpLivePerms{
         $result[0] = 'site is null';
       else:
         $result[0] = 'site=:site';
-        $result[1][] = [':site', $Options['Site'], PdoStr];
+        $result[1][] = [':site', $Site, PdoStr];
       endif;
       $result = $this->PhpLivePdo->Run("
         select resource_id
