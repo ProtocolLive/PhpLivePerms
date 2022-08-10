@@ -1,39 +1,46 @@
 <?php
 //Protocol Corporation Ltda.
 //https://github.com/ProtocolLive
-//Version 2022.06.28.00
+//Version 2022.08.10.00
 
-class PhpLivePerms{
-  private PhpLiveDb $PhpLiveDb;
+final class PhpLivePermsAccess{
+  public function __construct(
+    public readonly bool $Read,
+    public readonly bool $Write,
+    public readonly bool $Owner
+  ){}
+}
 
-  public function __construct(PhpLiveDb &$PhpLiveDb){
-    $this->PhpLiveDb = $PhpLiveDb;
-  }
+final class PhpLivePerms{
+  public function __construct(
+    private PhpLiveDb $PhpLiveDb
+  ){}
 
-  public function Access(string $Resource, int $User = null):array{
-    $return = ['r' => false, 'w' => false, 'o' => false];
+  public function Access(string $Resource, int $User = null):PhpLivePermsAccess{
     //Get resource id
     $consult = $this->PhpLiveDb->Select('sys_resources');
-    $consult->Fields('resource_id');
     $consult->WhereAdd('resource', $Resource, PhpLiveDbTypes::Str);
     $result = $consult->Run();
     if(count($result) === 0):
-      return $return;
+      return new PhpLivePermsAccess(true, false, false, false);
     else:
       $Resource = $result[0]['resource_id'];
     endif;
     // Permissions for everyone
     $result = $this->PhpLiveDb->Select('sys_perms');
-    $result->Fields('r,w,o');
     $result->WhereAdd('resource_id', $Resource, PhpLiveDbTypes::Int);
     $result->WhereAdd('group_id', 1, PhpLiveDbTypes::Int);
     $result = $result->Run();
     if(count($result) === 1):
-      $return = $result[0];
+      return new PhpLivePermsAccess(
+        $result[0]['r'],
+        $result[0]['w'],
+        false
+      );
     endif;
     // Unauthenticated?
     if($User == 0):
-      return $return;
+      return new PhpLivePermsAccess(true, false, false, false);
     endif;
     // Admin?
     $result = $this->PhpLiveDb->Select('sys_usergroup');
@@ -41,11 +48,10 @@ class PhpLivePerms{
     $result->WhereAdd('group_id', 3, PhpLiveDbTypes::Int);
     $result = $result->Run();
     if(count($result) === 1):
-      return ['r' => true, 'w' => true, 'o' => false];
+      return new PhpLivePermsAccess(true, true, true, false);
     endif;
     // Others
     $result = $this->PhpLiveDb->Select('sys_perms');
-    $result->Fields('r,w,o');
     $result->WhereAdd('resource_id', $Resource, PhpLiveDbTypes::Int);
     $result->WhereAdd(
       'user_id',
@@ -76,10 +82,32 @@ class PhpLivePerms{
       Parenthesis: PhpLiveDbParenthesis::Close,
       CustomPlaceholder: 'group3'
     );
-    $result = $result->Run();
-    if(count($result) > 0):
-      $return = $result[0];
-    endif;
-    return $return;
+    $result->Order('allow desc');
+    $result->Run(Fetch: true);
+    $return = ['r' => false, 'w' => false, 'o' => false];
+    while(($line = $result->Fetch()) !== false):
+      if($line['allow']):
+        if($line['r'] == 1):
+          $return['r'] = true;
+        elseif($line['w'] == 1):
+          $return['w'] = true;
+        elseif($line['o'] == 1):
+          $return['o'] = true;
+        endif;
+      else:
+        if($line['r'] == 1):
+          $return['r'] = false;
+        elseif($line['w'] == 1):
+          $return['w'] = false;
+        elseif($line['o'] == 1):
+          $return['o'] = false;
+        endif;
+      endif;
+    endwhile;
+    return new PhpLivePermsAccess(
+      $return['r'],
+      $return['w'],
+      $return['o'],
+    );
   }
 }
