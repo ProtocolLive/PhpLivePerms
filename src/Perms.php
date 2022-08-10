@@ -1,7 +1,7 @@
 <?php
 //Protocol Corporation Ltda.
 //https://github.com/ProtocolLive
-//Version 2022.08.10.00
+//Version 2022.08.10.01
 
 final class PhpLivePermsAccess{
   public function __construct(
@@ -16,7 +16,7 @@ final class PhpLivePerms{
     private PhpLiveDb $PhpLiveDb
   ){}
 
-  public function Access(string $Resource, int $User = null):PhpLivePermsAccess{
+  public function __invoke(string $Resource, int $User = null):PhpLivePermsAccess{
     //Get resource id
     $consult = $this->PhpLiveDb->Select('sys_resources');
     $consult->WhereAdd('resource', $Resource, PhpLiveDbTypes::Str);
