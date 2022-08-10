@@ -1,7 +1,7 @@
 <?php
 //Protocol Corporation Ltda.
 //https://github.com/ProtocolLive
-//Version 2022.08.10.01
+//Version 2022.08.10.02
 
 final class PhpLivePermsAccess{
   public function __construct(
@@ -48,7 +48,7 @@ final class PhpLivePerms{
     $result->WhereAdd('group_id', 3, PhpLiveDbTypes::Int);
     $result = $result->Run();
     if(count($result) === 1):
-      return new PhpLivePermsAccess(true, true, true, false);
+      return new PhpLivePermsAccess(true, true, false);
     endif;
     // Others
     $result = $this->PhpLiveDb->Select('sys_perms');
