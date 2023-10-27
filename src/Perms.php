@@ -12,7 +12,7 @@ use ProtocolLive\PhpLiveDb\{
 };
 
 /**
- * @version 2023.10.27.06
+ * @version 2023.10.27.07
  */
 final class Perms{
   public function __construct(
@@ -24,19 +24,19 @@ final class Perms{
     int $User = null
   ):Perm{
     //Get resource id
-    $consult = $this->PhpLiveDb->Select('sys_resources');
-    $consult->WhereAdd('resource', $Resource, Types::Str);
-    $result = $consult->Run();
+    $result = $this->PhpLiveDb->Select('sys_resources')
+    ->WhereAdd('resource', $Resource, Types::Str)
+    ->Run();
     if(count($result) === 0):
       return new Perm(true, false, false);
     else:
       $Resource = $result[0]['resource_id'];
     endif;
     // Permissions for everyone
-    $result = $this->PhpLiveDb->Select('sys_perms');
-    $result->WhereAdd('resource_id', $Resource, Types::Int);
-    $result->WhereAdd('group_id', 1, Types::Int);
-    $result = $result->Run();
+    $result = $this->PhpLiveDb->Select('sys_perms')
+    ->WhereAdd('resource_id', $Resource, Types::Int)
+    ->WhereAdd('group_id', 1, Types::Int)
+    ->Run();
     if(count($result) === 1):
       return new Perm(
         $result[0]['r'],
@@ -49,49 +49,49 @@ final class Perms{
       return new Perm(true, false, false);
     endif;
     // Admin?
-    $result = $this->PhpLiveDb->Select('sys_usergroup');
-    $result->WhereAdd('user_id', $User, Types::Int);
-    $result->WhereAdd('group_id', 3, Types::Int);
-    $result = $result->Run();
+    $result = $this->PhpLiveDb->Select('sys_usergroup')
+    ->WhereAdd('user_id', $User, Types::Int)
+    ->WhereAdd('group_id', 3, Types::Int)
+    ->Run();
     if(count($result) === 1):
       return new Perm(true, true, false);
     endif;
     // Others
-    $result = $this->PhpLiveDb->Select('sys_perms');
-    $result->WhereAdd('resource_id', $Resource, Types::Int);
-    $result->WhereAdd(
+    $result = $this->PhpLiveDb->Select('sys_perms')
+    ->WhereAdd('resource_id', $Resource, Types::Int)
+    ->WhereAdd(
       'user_id',
       $User,
       Types::Int,
       Parenthesis: Parenthesis::Open
-    );
-    $result->WhereAdd(
+    )
+    ->WhereAdd(
       'group_id',
       'select group_id from sys_usergroup where user_id=:user_id',
       Types::Sql,
       Operators::In,
       AndOr::Or,
       CustomPlaceholder: 'group1'
-    );
-    $result->WhereAdd(
+    )
+    ->WhereAdd(
       'group_id',
       1,
       Types::Int,
       AndOr: AndOr::Or,
       CustomPlaceholder: 'group2'
-    );
-    $result->WhereAdd(
+    )
+    ->WhereAdd(
       'group_id',
       2,
       Types::Int,
       AndOr: AndOr::Or,
       Parenthesis: Parenthesis::Close,
       CustomPlaceholder: 'group3'
-    );
-    $result->Order('allow desc');
-    $result->Run(Fetch: true);
+    )
+    ->Order('allow desc')
+    ->Run();
     $return = ['r' => false, 'w' => false, 'o' => false];
-    while(($line = $result->Fetch()) !== false):
+    foreach($result as $line):
       if($line['allow']):
         if($line['r'] == 1):
           $return['r'] = true;
@@ -109,7 +109,7 @@ final class Perms{
           $return['o'] = false;
         endif;
       endif;
-    endwhile;
+    endforeach;
     return new Perm(
       $return['r'],
       $return['w'],
