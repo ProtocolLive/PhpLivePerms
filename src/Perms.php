@@ -2,10 +2,12 @@
 //Protocol Corporation Ltda.
 //https://github.com/ProtocolLive
 
+namespace ProtocolLive\PhpLivePerms;
+
 /**
- * @version 2023.10.27.00
+ * @version 2023.10.27.01
  */
-final class PhpLivePerms{
+final class Perms{
   public function __construct(
     private PhpLiveDb $PhpLiveDb
   ){}
