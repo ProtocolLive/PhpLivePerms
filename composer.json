@@ -1,0 +1,21 @@
+{
+  "name": "protocollive/phpliveperms",
+  "description": "Biblioteca de gerenciamento de permissões de acesso",
+  "type": "library",
+  "require": {
+    "php": ">=8.1"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fabio Carpi",
+      "email": "protocollive@outlook.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "ProtocolLive\\PhpLivePerms\\": "src"
+    }
+  }
+}
