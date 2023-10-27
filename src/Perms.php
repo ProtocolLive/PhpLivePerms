@@ -12,7 +12,7 @@ use ProtocolLive\PhpLiveDb\{
 };
 
 /**
- * @version 2023.10.27.05
+ * @version 2023.10.27.06
  */
 final class Perms{
   public function __construct(
@@ -22,13 +22,13 @@ final class Perms{
   public function __invoke(
     string $Resource,
     int $User = null
-  ):Perms{
+  ):Perm{
     //Get resource id
     $consult = $this->PhpLiveDb->Select('sys_resources');
     $consult->WhereAdd('resource', $Resource, Types::Str);
     $result = $consult->Run();
     if(count($result) === 0):
-      return new Perms(true, false, false, false);
+      return new Perm(true, false, false);
     else:
       $Resource = $result[0]['resource_id'];
     endif;
@@ -38,7 +38,7 @@ final class Perms{
     $result->WhereAdd('group_id', 1, Types::Int);
     $result = $result->Run();
     if(count($result) === 1):
-      return new Perms(
+      return new Perm(
         $result[0]['r'],
         $result[0]['w'],
         false
@@ -46,7 +46,7 @@ final class Perms{
     endif;
     // Unauthenticated?
     if($User == 0):
-      return new Perms(true, false, false, false);
+      return new Perm(true, false, false);
     endif;
     // Admin?
     $result = $this->PhpLiveDb->Select('sys_usergroup');
@@ -54,7 +54,7 @@ final class Perms{
     $result->WhereAdd('group_id', 3, Types::Int);
     $result = $result->Run();
     if(count($result) === 1):
-      return new Perms(true, true, false);
+      return new Perm(true, true, false);
     endif;
     // Others
     $result = $this->PhpLiveDb->Select('sys_perms');
@@ -110,7 +110,7 @@ final class Perms{
         endif;
       endif;
     endwhile;
-    return new Perms(
+    return new Perm(
       $return['r'],
       $return['w'],
       $return['o'],
