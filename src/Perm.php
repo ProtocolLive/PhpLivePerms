@@ -5,14 +5,17 @@
 namespace ProtocolLive\PhpLivePerms;
 
 /**
- * @version 2023.10.27.02
+ * @version 2023.10.27.03
  */
 final class Perm{
   public function __construct(
     private PhpLiveDb $PhpLiveDb
   ){}
 
-  public function __invoke(string $Resource, int $User = null):Perms{
+  public function __invoke(
+    string $Resource,
+    int $User = null
+  ):Perms{
     //Get resource id
     $consult = $this->PhpLiveDb->Select('sys_resources');
     $consult->WhereAdd('resource', $Resource, Types::Str);
