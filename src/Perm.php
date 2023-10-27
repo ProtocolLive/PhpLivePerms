@@ -5,7 +5,7 @@
 namespace ProtocolLive\PhpLivePerms;
 
 /**
- * @version 2023.10.27.01
+ * @version 2023.10.27.02
  */
 final class Perm{
   public function __construct(
@@ -15,7 +15,7 @@ final class Perm{
   public function __invoke(string $Resource, int $User = null):Perms{
     //Get resource id
     $consult = $this->PhpLiveDb->Select('sys_resources');
-    $consult->WhereAdd('resource', $Resource, PhpLiveDbTypes::Str);
+    $consult->WhereAdd('resource', $Resource, Types::Str);
     $result = $consult->Run();
     if(count($result) === 0):
       return new Perms(true, false, false, false);
@@ -24,8 +24,8 @@ final class Perm{
     endif;
     // Permissions for everyone
     $result = $this->PhpLiveDb->Select('sys_perms');
-    $result->WhereAdd('resource_id', $Resource, PhpLiveDbTypes::Int);
-    $result->WhereAdd('group_id', 1, PhpLiveDbTypes::Int);
+    $result->WhereAdd('resource_id', $Resource, Types::Int);
+    $result->WhereAdd('group_id', 1, Types::Int);
     $result = $result->Run();
     if(count($result) === 1):
       return new Perms(
@@ -40,42 +40,42 @@ final class Perm{
     endif;
     // Admin?
     $result = $this->PhpLiveDb->Select('sys_usergroup');
-    $result->WhereAdd('user_id', $User, PhpLiveDbTypes::Int);
-    $result->WhereAdd('group_id', 3, PhpLiveDbTypes::Int);
+    $result->WhereAdd('user_id', $User, Types::Int);
+    $result->WhereAdd('group_id', 3, Types::Int);
     $result = $result->Run();
     if(count($result) === 1):
       return new Perms(true, true, false);
     endif;
     // Others
     $result = $this->PhpLiveDb->Select('sys_perms');
-    $result->WhereAdd('resource_id', $Resource, PhpLiveDbTypes::Int);
+    $result->WhereAdd('resource_id', $Resource, Types::Int);
     $result->WhereAdd(
       'user_id',
       $User,
-      PhpLiveDbTypes::Int,
-      Parenthesis: PhpLiveDbParenthesis::Open
+      Types::Int,
+      Parenthesis: Parenthesis::Open
     );
     $result->WhereAdd(
       'group_id',
       'select group_id from sys_usergroup where user_id=:user_id',
-      PhpLiveDbTypes::Sql,
-      PhpLiveDbOperators::In,
-      PhpLiveDbAndOr::Or,
+      Types::Sql,
+      Operators::In,
+      AndOr::Or,
       CustomPlaceholder: 'group1'
     );
     $result->WhereAdd(
       'group_id',
       1,
-      PhpLiveDbTypes::Int,
-      AndOr: PhpLiveDbAndOr::Or,
+      Types::Int,
+      AndOr: AndOr::Or,
       CustomPlaceholder: 'group2'
     );
     $result->WhereAdd(
       'group_id',
       2,
-      PhpLiveDbTypes::Int,
-      AndOr: PhpLiveDbAndOr::Or,
-      Parenthesis: PhpLiveDbParenthesis::Close,
+      Types::Int,
+      AndOr: AndOr::Or,
+      Parenthesis: Parenthesis::Close,
       CustomPlaceholder: 'group3'
     );
     $result->Order('allow desc');
