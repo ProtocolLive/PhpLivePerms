@@ -3,9 +3,16 @@
 //https://github.com/ProtocolLive
 
 namespace ProtocolLive\PhpLivePerms;
+use ProtocolLive\PhpLiveDb\{
+  AndOr,
+  Operators,
+  Parenthesis,
+  PhpLiveDb,
+  Types
+};
 
 /**
- * @version 2023.10.27.03
+ * @version 2023.10.27.04
  */
 final class Perm{
   public function __construct(
