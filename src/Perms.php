@@ -12,14 +12,14 @@ use ProtocolLive\PhpLiveDb\{
 };
 
 /**
- * @version 2024.01.04.00
+ * @version 2024.01.04.01
  */
 final class Perms{
   public function __construct(
     private PhpLiveDb $PhpLiveDb
   ){}
 
-  public function __invoke(
+  public function Get(
     string $Resource,
     int $User = null
   ):Perm{
