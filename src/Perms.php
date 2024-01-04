@@ -12,7 +12,7 @@ use ProtocolLive\PhpLiveDb\{
 };
 
 /**
- * @version 2023.10.27.07
+ * @version 2024.01.04.00
  */
 final class Perms{
   public function __construct(
@@ -45,8 +45,8 @@ final class Perms{
       );
     endif;
     // Unauthenticated?
-    if($User == 0):
-      return new Perm(true, false, false);
+    if($User === 0):
+      return new Perm(false, false, false);
     endif;
     // Admin?
     $result = $this->PhpLiveDb->Select('sys_usergroup')
