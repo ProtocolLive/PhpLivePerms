@@ -3,8 +3,8 @@
   "description": "Biblioteca de gerenciamento de permissões de acesso",
   "type": "library",
   "require": {
-    "php": ">=8.1",
-    "protocollive/phplivedb": "2023.09.13"
+    "php": ">=8.2",
+    "protocollive/phplivedb": "*"
   },
   "license": "MIT",
   "authors": [

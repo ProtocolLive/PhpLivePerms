@@ -5,12 +5,12 @@
 namespace ProtocolLive\PhpLivePerms;
 
 /**
- * @version 2023.10.27.02
+ * @version 2024.01.04.00
  */
-final class Perm{
+final readonly class Perm{
   public function __construct(
-    public readonly bool $Read,
-    public readonly bool $Write,
-    public readonly bool $Owner
+    public bool $Read,
+    public bool $Write,
+    public bool $Owner
   ){}
 }
