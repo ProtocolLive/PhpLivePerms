@@ -3,16 +3,16 @@
 //https://github.com/ProtocolLive
 
 namespace ProtocolLive\PhpLivePerms;
-use ProtocolLive\PhpLiveDb\{
+use ProtocolLive\PhpLiveDb\Enums\{
   AndOr,
   Operators,
   Parenthesis,
-  PhpLiveDb,
   Types
 };
+use ProtocolLive\PhpLiveDb\PhpLiveDb;
 
 /**
- * @version 2024.01.04.01
+ * @version 2024.02.23.00
  */
 final class Perms{
   public function __construct(
