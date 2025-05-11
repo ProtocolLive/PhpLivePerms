@@ -12,7 +12,7 @@ use ProtocolLive\PhpLiveDb\Enums\{
 use ProtocolLive\PhpLiveDb\PhpLiveDb;
 
 /**
- * @version 2024.02.23.00
+ * @version 2025.05.11.00
  */
 final class Perms{
   public function __construct(
@@ -21,7 +21,7 @@ final class Perms{
 
   public function Get(
     string $Resource,
-    int $User = null
+    int|null $User = null
   ):Perm{
     //Get resource id
     $result = $this->PhpLiveDb->Select('sys_resources')
